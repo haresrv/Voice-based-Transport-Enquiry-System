@@ -3,6 +3,7 @@ import logo from './Images/home.jpg';
 import './App.css';
 import Navigation from './Components/Navigation/Navigation';
 import Logo from './Components/Logo/Logo';
+import AdminLogin from './Components/AdminLogin/AdminLogin';
 
 
 class App extends Component {
@@ -36,8 +37,10 @@ componentDidMount() {
               (
                 <div>
 
-                <Navigation/>
-                <Logo/>
+                {/*<Navigation/>
+                <Logo/>*/}
+                <AdminLogin/>
+
                 </div>
               )
      }              
