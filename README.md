@@ -1,2 +1,0 @@
-
-ReactJS Application for DBMS Project on "VOICE BASED AUTOMATED ENQUIRY SYSTEM" 
