@@ -1,26 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{Component} from 'react';
+import logo from './Images/home.jpg';
 import './App.css';
+import Navigation from './Components/Navigation/Navigation';
+import Logo from './Components/Logo/Logo';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  constructor(props)
+  {
+    super(props);
+    this.state={
+      busy:false
+    }
+  }
+
+componentDidMount() {
+  setTimeout(function() { //Start the timer
+      this.setState({busy: false}) 
+  }.bind(this), 5000);
+}
+
+  render(){
+      return(
+  <div className="App">
+        {
+          (this.state.busy==true)?
+              //if true
+            (
+
+               <header className="App-header">
+                <img src={logo} className="App-logo" alt="logo" />
+               </header>
+              
+            )://else if false
+              (
+                <div>
+
+                <Navigation/>
+                <Logo/>
+                </div>
+              )
+     }              
+   </div>     
+    
+);
+    }
 }
 
 export default App;
