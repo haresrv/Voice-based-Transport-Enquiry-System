@@ -1,0 +1,15 @@
+#uid:valid {
+    color: green;
+}
+#uid:invalid {
+    color: red;
+}
+
+.formwarpx
+{
+  background-color: #ffffff;
+  width: 420px;
+  height: 750px;
+  padding: 20px;
+  justify-content:center;
+}

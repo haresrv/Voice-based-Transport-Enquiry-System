@@ -1,0 +1,39 @@
+.Container{
+	padding: 60px;
+}
+
+.Heads{
+	font-size: 50px;
+	color: black;
+}
+
+.wrap
+{
+  margin: 0 auto;  
+  background-color: #ffffff;
+  width: 420px;
+  height: 620px;
+  padding: 20px;
+ 
+  justify-content:center;
+}
+
+.FormGroup{
+	margin: 40px;
+}
+
+.Boxes{
+	width: 30%;
+	height: 40px;
+	padding: 25px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: black;
+	border-radius: 40px;
+	font-size: 16px;
+}
+
+input[type=submit]{
+	color: white;
+	background-color: black;
+}

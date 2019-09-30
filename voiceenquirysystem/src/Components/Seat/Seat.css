@@ -1,0 +1,131 @@
+.Container{
+	padding: 60px;
+}
+
+.booking-details {
+    float: right;
+    margin-left: 8%;
+    width: 34%;
+}
+.booking-details h2 {
+	margin: 25px 0 20px 0;
+	font-size: 17px;
+}
+.booking-details h3 {
+    margin:27px 0px 8px 0;
+    font-size: 14px;
+    color: #C3B400;
+    font-size: 18px;
+	font-weight:600;
+}
+
+.avail
+{
+	background-color:#2a7022;
+	
+}
+.booked
+{
+	background-color:#d1271b;
+	
+
+}
+
+div.seatCharts-legend {
+	padding-left: 0px;
+
+}
+ul.seatCharts-legendList {
+	padding-left: 0px;
+}
+span.seatCharts-legendDescription {
+    margin-left: 5px;
+    
+    font-size: 14px;
+}
+
+ul.seatCharts-legendList {
+	list-style: none;
+}
+li.seatCharts-legendItem {
+	margin-top: 10px;
+	line-height: 2;
+}
+/*		  		
+legend
+seatCharts-legend
+seatCharts-legendList
+seatCharts-legendItem
+seatCharts-legendDescription
+seatCharts-seat
+seatCharts-cell
+*/
+
+.checkout-button {
+    display: block;
+    margin: 10px 0;
+    margin-left: 10px;
+    font-size: 16px;
+    background: #C3B400;
+    border: none;
+    color: #fff;
+    padding: 11px 23px;
+    outline: none;
+	cursor:pointer;
+}
+.checkout-button:hover {
+    background: #000;
+	transition: 0.5s all;
+}
+
+.rowC{display:flex; flex-direction:row;}
+
+@font-face {
+font-family: 'SEGA LOGO FONT';
+font-style: normal;
+font-weight: normal;
+src: local('SEGA LOGO FONT'), url('SEGA.woff') format('woff');
+}
+
+.face
+{
+	font-family: 'SEGA LOGO FONT'
+}
+
+.Heads{
+	font-size: 50px;
+	color: black;
+}
+
+.wraps
+{
+  margin: 0 auto;  
+  margin-top: 40px;
+  background-color: #ffffff;
+  width: 500px;
+  height: 650px;
+  padding: 20px;
+ 
+  justify-content:center;
+}
+
+.FormGroup{
+	margin: 40px;
+}
+
+.Boxes{
+	width: 30%;
+	height: 40px;
+	padding: 25px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: black;
+	border-radius: 40px;
+	font-size: 16px;
+}
+
+input[type=submit]{
+	color: white;
+	background-color: black;
+	margin-top: 50px;
+}

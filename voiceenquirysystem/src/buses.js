@@ -1,0 +1,45 @@
+export const bus=[
+{
+	id:1,
+	name:'ABC',
+	from:'Neyveli',
+	to:'Coimbatore'
+},
+{
+	id:2,
+	name:'CDE',
+	from:'Coimbatore',
+	to:'Bangalore'
+},
+{
+	id:3,
+	name:'EFG',
+	from:'Bangalore',
+	to:'Chennai'
+},
+{
+	id:4,
+	name:'GHI',
+	from:'Chennai',
+	to:'Neyveli'
+},
+{
+	id:5,
+	name:'IJK',
+	from:'Chennai',
+	to:'Coimbatore'
+},
+{
+	id:6,
+	name:'KLM',
+	from:'Bangalore',
+	to:'Kochi'
+},
+{
+	id:7,
+	name:'MNO',
+	from:'Kochi',
+	to:'Trichy'
+}
+
+]

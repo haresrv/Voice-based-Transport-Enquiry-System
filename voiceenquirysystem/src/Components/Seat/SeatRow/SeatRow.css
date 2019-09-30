@@ -1,0 +1,76 @@
+div.seatCharts-space {
+    background: none;
+}
+
+div.seatCharts-seat.available {
+    background-color: green;
+}
+
+div.seatCharts-seat {
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+div.seatCharts-cell {
+    color: #182C4E;
+    height: 32px;
+    width: 32px;
+    line-height: 31px;
+}
+
+div.seatCharts-seat {
+    color: white;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    cursor: default;
+}
+
+div.seatCharts-cell {
+    height: 16px;
+    width: 16px;
+    margin: 3px;
+    float: left;
+    text-align: center;
+    outline: none;
+    font-size: 13px;
+    line-height: 16px;
+    color: blue;
+}
+div.seatCharts-seat.available.first-class {
+    background-color: #2483F7;
+}
+div.seatCharts-seat.available {
+    background-color: #969696;
+}
+div.seatCharts-seat.available {
+    background-color: green;
+}
+div.seatCharts-seat {
+    color: #FFFFFF;
+    cursor: pointer;
+}
+div.seatCharts-cell {
+    color: #182C4E;
+    height: 32px;
+    width: 32px;
+    line-height: 31px;
+}
+div.seatCharts-seat {
+    color: white;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    cursor: default;
+}
+div.seatCharts-cell {
+    height: 16px;
+    width: 16px;
+    margin: 3px;
+    float: left;
+    text-align: center;
+    outline: none;
+    font-size: 13px;
+    line-height: 16px;
+    color: blue;
+}
