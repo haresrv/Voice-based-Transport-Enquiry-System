@@ -15,5 +15,6 @@ To run the app,
  
 In server.js file, edit the connection details of your host Database and execute commands in Database.txt. Now you are ready to go.
 
-To run the server, 
- Type: node server.js
+Type node server.js to run the server in default port: 3000
+
+Happy Hacking!
