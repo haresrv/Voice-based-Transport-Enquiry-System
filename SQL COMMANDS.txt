@@ -197,8 +197,6 @@ end if;
 end$$
 delimiter ;
 
-
-
 create procedure totalrevenue()
 begin
 select AgencyName,sum(fare) from BusInfo natural join BusSchedule group by AgencyName;
