@@ -9,6 +9,9 @@ var mysql = require('mysql');
 
 const app = express();
 
+app.use(cors())
+app.use(bodyParser.json());
+
 var con = mysql.createConnection({
   host: "database-1.czuepjtqzk8i.us-east-1.rds.amazonaws.com", 
   user:"admin", 
@@ -34,10 +37,6 @@ con.connect(function(err) {
   });
 });
 
-
-
-app.use(cors())
-app.use(bodyParser.json());
 
 app.get('/',(req,res)=>{res.json('avc')});	
 
