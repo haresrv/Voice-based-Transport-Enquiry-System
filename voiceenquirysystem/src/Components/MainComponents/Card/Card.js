@@ -135,7 +135,7 @@ class Card extends Component
 							<p>Driver Name: --</p>
 							<p>Driver Phone:  --</p>
 						</div>					
-						<input type='submit' value='Search Location' style={{marginLeft:'10px'}} onClick={this.handleLocation} className="btn btn-primary"/>
+						<input type='button' value='Search Location' style={{marginLeft:'10px'}} onClick={this.handleLocation} className="btn btn-primary"/>
 					</div>
 
 			);

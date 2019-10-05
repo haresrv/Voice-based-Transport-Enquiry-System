@@ -7,6 +7,34 @@ export default class ArtyomCommandsManager {
         this._artyom = ArtyomInstance;
     }
     
+     speak = (xyz) => {
+      // Check if speaking
+      console.log(this.state);
+      const synth = window.speechSynthesis;
+      if (synth.speaking) {
+        console.error('Already speaking...');
+        return;
+      }
+        
+        // Get speak text
+        const speakText = new SpeechSynthesisUtterance(xyz);
+
+        // Speak end
+        speakText.onend = e => {
+          console.log('Done speaking...');
+
+        };
+
+        // Speak error
+        speakText.onerror = e => {
+          console.error('Something went wrong');
+        };
+
+        // Speak
+        synth.speak(speakText);
+      
+    };
+
     // Execute the loadCommands method to inject the methods to the instance of Artyom
     loadCommands(){
         let Artyom = this._artyom;
@@ -17,6 +45,13 @@ export default class ArtyomCommandsManager {
                 indexes: ["Hello", "Hi"],
                 action: () => {
                     Artyom.say("Hello, how are you?");
+                }
+            },{
+                indexes: ["Change Route"],
+                action: () => {
+                    this.speak("Tell Route to change to")
+                  var  xyz=prompt("Enter Route:")
+                    alert(xyz);
                 }
             },
             {
@@ -40,3 +75,5 @@ export default class ArtyomCommandsManager {
         ]);
     }
 }
+
+

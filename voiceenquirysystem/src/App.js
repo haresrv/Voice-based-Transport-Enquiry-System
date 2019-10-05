@@ -20,7 +20,7 @@ const initial_state={
       busy:false,
       isSignedin:false,
       isAdmin:false,
-      route:'home'}
+      route:'home'} 
    
 
 class App extends Component {
@@ -28,10 +28,10 @@ class App extends Component {
   {
     super(props);
     this.state={
-      busy:true,
+      busy:false,
       isSignedin:false,
       isAdmin:false,
-      route:'home',
+      route:'t',
       error:'',
       routeid:[3,4],
       selbus:[]
@@ -44,7 +44,7 @@ componentDidMount() {
   { //Start the timer
       this.setState({busy: false});  // put true here if u want to see opening animation
   }.bind(this), 0);
-// this.speak("WELCOME TO DELOS DESTINATIONS. Enjoy your Stay. Please Select what you're looking for!!");
+this.speak("WELCOME TO DELOS DESTINATIONS. Enjoy your Stay. Please Select what you're looking for!!");
 }
 
     speak = (xyz) => {
@@ -259,7 +259,7 @@ else if(route === 'register')
                                              (
                                                 <div>
                                                     <Navigation route={this.state.route} onRouteChange={this.onRouteChange} isSignedin={this.state.isSignedin}/>
-                                          <Seat bus={this.state.selbus}  seldate={this.state.traveldate} routeid={this.state.selbus.routeid} SetBus={this.SetBus} setPNR={this.setPNR} setbooked={this.setbooked} onRouteChange={this.onRouteChange}/>                  
+                                                    <Seat onRouteChange={this.onRouteChange} bus={this.state.selbus}  seldate={this.state.traveldate} routeid={this.state.selbus.routeid} SetBus={this.SetBus} setPNR={this.setPNR} setbooked={this.setbooked} onRouteChange={this.onRouteChange}/>                  
                                                 </div>
                                                 
                                               ): (this.state.route==='testing')?
@@ -267,7 +267,7 @@ else if(route === 'register')
                                              (
                                                 <div>
                                                     <Navigation route={this.state.route} onRouteChange={this.onRouteChange} isSignedin={this.state.isSignedin}/>
-                                                    <Payment/>
+                                                    <Payment onRouteChange={this.onRouteChange}/>
                                                 </div>
                                                 
                                               ): (this.state.route==='t')?
@@ -296,7 +296,7 @@ else if(route === 'register')
                                                       </div>
                                                   ):(this.state.route==='ticket')? (
                                                   
-                                                    <Ticket dot={this.traveldate} start={this.state.from} to={this.state.to} stime={this.state.selbus.StartTime} seats={this.state.bookedseats}/>
+                                                         <Ticket onRouteChange={this.onRouteChange}  dot={this.state.traveldate} start={this.state.from} to={this.state.to} stime={this.state.selbus.StartTime} seats={this.state.bookedseats}/>
                                                   ):
 
                                              <p>ERROR 404</p>

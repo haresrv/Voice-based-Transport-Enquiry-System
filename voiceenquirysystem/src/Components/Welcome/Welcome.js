@@ -49,6 +49,34 @@ class Welcome extends Component
      this.filterToPlace = this.filterToPlace.bind(this);
     }
     
+    speak = (xyz) => {
+      // Check if speaking
+      console.log(this.state);
+      const synth = window.speechSynthesis;
+      if (synth.speaking) {
+        console.error('Already speaking...');
+        return;
+      }
+        
+        // Get speak text
+        const speakText = new SpeechSynthesisUtterance(xyz);
+
+        // Speak end
+        speakText.onend = e => {
+          console.log('Done speaking...');
+
+        };
+
+        // Speak error
+        speakText.onerror = e => {
+          console.error('Something went wrong');
+        };
+
+        // Speak
+        synth.speak(speakText);
+      
+    };
+
     componentDidMount() {
         fetch('http://localhost:3001/BusStops').then(res=> res.json())
         .then(data=>{this.setState({Stops:JSON.parse(data)})})
@@ -82,9 +110,11 @@ class Welcome extends Component
     }
     
 
+
 	handleRegister = (event) => {
 		event.preventDefault();
         // this.props.onRouteChange('home');
+       
         console.log(this.state);
         //this.props.RouteChanger('search',this.state.fromSelect,this.state.toSelect)
 
@@ -126,7 +156,6 @@ class Welcome extends Component
         } })
         .catch((err)=>{console.log(err)})
 	}
-
 
 
     handleChange1 = (selectedOption) => {
@@ -173,6 +202,7 @@ return (
                                                 minLength={1} 
                                                 onChange={(e) => this.setState({fromSelect: e.value})} />
     			 </div>
+                    <App id={1}/>
 
 
     			  <div className="form-group col-md-10">
@@ -188,7 +218,7 @@ return (
                                                 onChange={(e) => this.setState({toSelect: e.value})} />
 
     			  </div>
-
+                    <App id={2}/>
 
 
     			  <div className="form-group col-md-10">

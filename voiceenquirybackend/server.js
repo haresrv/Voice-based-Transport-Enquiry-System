@@ -30,12 +30,7 @@ con.connect(function(err) {
       }
       console.log('ITS OK');
     // if there is no error, you have the fields object
-    // iterate for all the rows in fields object
-    Object.keys(result).forEach(function(key) {
-      var res = result[key];
-     console.log(res)
-    });
-
+    // iterate for all th
   });
 });
 
@@ -45,6 +40,27 @@ app.use(cors())
 app.use(bodyParser.json());
 
 app.get('/',(req,res)=>{res.json('avc')});	
+
+app.get('/COST',(req,res)=>{
+  con.query("call totalrevenue()", function (err, result, fields) {
+    
+    if (err) 
+      {
+        console.log('error');
+        console.log(err)
+
+      }
+      
+    var resx=[];
+      Object.keys(result).forEach(function(key) {
+      resx.push((result[key]));
+    });
+      console.log(resx)
+      res.json(JSON.stringify(resx));
+  });
+
+
+})
 
 app.get('/BusStops',(req,res)=>{
   
@@ -148,7 +164,6 @@ app.get('/fetchBuses/:id',(req,res)=>{
       {
         console.log('error');
         console.log(err)
-
       }
       
     var resx=[];
@@ -159,8 +174,6 @@ app.get('/fetchBuses/:id',(req,res)=>{
       console.log(resx);
       res.json(JSON.stringify(resx));
   });
-
-
 }); 
 
 
@@ -261,7 +274,8 @@ var regn=req.body.busregnno
 var pnr=req.body.pnr;
 var st=req.body.starttime
 
-    
+    console.log(st)
+
         console.log(`insert into Through values(${rid},${did},${st},'${regn}',${pnr})`)
          
        con.query(`insert into Through values(${rid},${did},${st},'${regn}',${pnr})`, function (err, result, fields) {

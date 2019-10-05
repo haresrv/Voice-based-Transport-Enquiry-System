@@ -36,7 +36,13 @@ if(this.props.filled.length>0)
 			
 			
 		}))
-}		
+}
+else
+{
+		return (this.state.Mapper.map((key, index) => {
+			return <Single key={index} filled={this.props.seatsfilled} reserve={this.props.reserve} change={this.props.change} seatNo={this.state.Mapper[index]} back='#2a7022'/>
+			
+		}))}		
 
 	}
 

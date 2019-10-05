@@ -38,8 +38,14 @@ constructor(props)
 // console.log(this.props.bus.BusRegnNo);
     }
 
+handleBooking1=()=>
+{
+	this.handleBooking();
+        
+}
+
+
 handleBooking=(event)=>{
-	event.preventDefault();
 	console.log(this.state)
 
 	if(this.state.seatsbooked.length==0)
@@ -48,82 +54,84 @@ handleBooking=(event)=>{
 	}
 	else
 	{
-				fetch('http://localhost:3001/Tickets',{
-						method:'post',
-						headers:{'Content-Type':'application/json'},
-						body:JSON.stringify({
-							traveldate:this.props.seldate,
-							busregnno:this.props.bus.BusRegnNo,
-							seatsbooked:this.state.seatsbooked,
-							starttime:this.props.bus.StartTime,
-							routeid:this.props.bus.RouteID,
-							driverid:this.props.bus.DriverID
-						})
-						})
-						.then(res=> res.json())
-						.then(data=>{this.setState({response:JSON.parse(data)},function(){console.log(this.state);console.log("NOOO")})})
-						.then(x=>{
-						if(this.state.response.error===null)
-						{ 
-								this.props.setPNR(this.state.response.pnr);
-						        this.props.setbooked(this.state.seatsbooked);
-						        fetch('http://localhost:3001/SeatsBooking',{
-										method:'post',
-										headers:{'Content-Type':'application/json'},
-										body:JSON.stringify({
-											pnr:this.state.response.pnr,
-											traveldate:this.props.seldate,
-											busregnno:this.props.bus.BusRegnNo,
-											seatsbooked:this.state.seatsbooked,
-											starttime:this.props.bus.StartTime,
-											routeid:this.props.bus.RouteID,
-											driverid:this.props.bus.DriverID
-										})
-										})
-										.then(res=> res.json())
-										.then(data=>{this.setState({response2:JSON.parse(data)})})
-										.then(x=>{
-										if(this.state.response2.error===null)
-										{ 
-											console.log("Entered into SeatsBooked")
-													fetch('http://localhost:3001/Through',{
-													method:'post',
-													headers:{'Content-Type':'application/json'},
-													body:JSON.stringify({
-														pnr:this.state.response.pnr,
-														traveldate:this.props.seldate,
-														busregnno:this.props.bus.BusRegnNo,
-														seatsbooked:this.state.seatsbooked,
-														starttime:this.props.bus.StartTime,
-														routeid:this.props.bus.RouteID,
-														driverid:this.props.bus.DriverID
-													})
-													})
-													.then(res=> res.json())
-													.then(data=>{this.setState({response3:JSON.parse(data)})})
-													.then(x=>{
-													if(this.state.response3.error===null)
-													{ 
-														console.log("Entered into Through")
-														alert("Succesfully Booked!!!")
+fetch('http://localhost:3001/Tickets',{
+method:'post',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+traveldate:this.props.seldate,
+busregnno:this.props.bus.BusRegnNo,
+seatsbooked:this.state.seatsbooked,
+starttime:this.props.bus.StartTime,
+routeid:this.props.bus.RouteID,
+driverid:this.props.bus.DriverID
+})
+})
+.then(res=> res.json())
+.then(data=>{this.setState({response:JSON.parse(data)},function(){console.log(this.state);console.log("NOOO")})})
+.then(x=>{
+		if(this.state.response.error===null)
+		{ 
+		this.props.setPNR(this.state.response.pnr);
+		this.props.setbooked(this.state.seatsbooked);
+		fetch('http://localhost:3001/SeatsBooking',{
+		method:'post',
+		headers:{'Content-Type':'application/json'},
+		body:JSON.stringify({
+		pnr:this.state.response.pnr,
+		traveldate:this.props.seldate,
+		busregnno:this.props.bus.BusRegnNo,
+		seatsbooked:this.state.seatsbooked,
+		starttime:this.props.bus.StartTime,
+		routeid:this.props.bus.RouteID,
+		driverid:this.props.bus.DriverID
+		})
+		})
+		.then(res=> res.json())
+		.then(data=>{this.setState({response2:JSON.parse(data)})})
+		.then(x=>{
+		if(this.state.response2.error===null)
+		{ 
+		console.log("Entered into SeatsBooked")
+		fetch('http://localhost:3001/Through',{
+		method:'post',
+		headers:{'Content-Type':'application/json'},
+		body:JSON.stringify({
+		pnr:this.state.response.pnr,
+		traveldate:this.props.seldate,
+		busregnno:this.props.bus.BusRegnNo,
+		seatsbooked:this.state.seatsbooked,
+		starttime:this.props.bus.StartTime,
+		routeid:this.props.bus.RouteID,
+		driverid:this.props.bus.DriverID
+		})
+		})
+		.then(res=> res.json())
+		.then(data=>{this.setState({response3:JSON.parse(data)})})
+		.then(x=>{
+		if(this.state.response3.error===null)
+		{ 
+		console.log("Entered into Through")
+		alert("Succesfully Booked!!!")
+		this.props.onRouteChange('testing');
 
-													}
-													else
-													alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
-													})
 
-										}
-										else
-										alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
-										})
+		}
+		else
+		alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+		})
 
-						}
-						else
-						alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
-						})
+		}
+		else
+		alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+		})
 
-	}
-	
+		}
+							else
+								alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+								})
+
+			}
+			
 
 
 
@@ -226,7 +234,7 @@ render()
 												</ul>										
 										Total: <b>₹<span id="total">({this.state.reserved*300})</span></b>
 
-										<button className="checkout-button" onClick={this.handleBooking} >Pay Now</button>
+										<button className="checkout-button" onClick={this.handleBooking1} >Pay Now</button>
 									</div>
 
 

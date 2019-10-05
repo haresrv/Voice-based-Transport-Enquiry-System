@@ -35,6 +35,9 @@ this.setState({[name]:value});
 
 handleSubmit=(event)=>{
 event.preventDefault();
+console.log("HERE")
+this.props.onRouteChange('ticket');
+
 }
 
 
@@ -59,7 +62,7 @@ render()
 						<input autoComplete='off' style={{marginLeft:'60px'}} type='text' value={this.state.expiry} name='expiry' onChange={this.handler}/><br/>
 						<label htmlFor='no'/>CVV NUMBER:						
 						<input autoComplete='off' style={{marginLeft:'40px'}} type='text' name='cvv' onChange={this.handler}/><br/>
-			  			<input type='submit' value='Confirm Booking' onSubmit={this.handleSubmit}/>
+			  			<input type='button' value='Confirm Booking' onClick={this.handleSubmit}/>
 			  		</div>
 			  </div>
 		);

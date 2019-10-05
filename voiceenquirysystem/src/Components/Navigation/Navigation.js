@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import tachyons from 'tachyons';
 import './Navigation.css';
+import App from '../VoiceResolver/App';
 
 
 class Navigation extends Component
@@ -10,6 +11,7 @@ class Navigation extends Component
 	{
 return(
 		<div>
+    <App id={1000}/>
 {
  (this.props.route==='register' || this.props.route==='signin')?
                            ( 
