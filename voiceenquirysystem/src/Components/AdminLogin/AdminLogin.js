@@ -11,7 +11,7 @@ class AdminLogin extends Component
 		this.state = {
 		 user: '',
 		 pass: '',
-		 logged: true,
+		 logged: false,
 		 reason:''
 		};
 	}
@@ -29,33 +29,33 @@ class AdminLogin extends Component
 	handleSubmit = (event) => {
 		event.preventDefault();
 		console.log(this.state);
-   		this.setState({logged:true})
+//   		this.setState({logged:true})
 		
 
-		//  fetch('http://localhost:3001/adminLogin',{
-		//   method:'post',
-		//   headers:{'Content-Type':'application/json'},
-		//   body:JSON.stringify({
-		// 		username:this.state.user,
-		// 		password:this.state.pass
-		//   })
-		//   }).then(res=> res.json())
-		//   .then(data=>{this.setState({response:JSON.parse(data)})})
-		//   .then(x=>{
-		//    if(this.state.response.error==='')
-		//   { 
-		//   	console.log(this.state);
-		//    //alert('User valid');
-		//    this.setState({logged:true})
+		 fetch('http://localhost:3001/adminLogin',{
+		  method:'post',
+		  headers:{'Content-Type':'application/json'},
+		  body:JSON.stringify({
+				username:this.state.user,
+				password:this.state.pass
+		  })
+		  }).then(res=> res.json())
+		  .then(data=>{this.setState({response:JSON.parse(data)})})
+		  .then(x=>{
+		   if(this.state.response.error==='')
+		  { 
+		  	console.log(this.state);
+		   //alert('User valid');
+		   this.setState({logged:true})
 		  
-		//   }
-		//   else
-		//   {
+		  }
+		  else
+		  {
 		
-		// alert("Not admin"+JSON.stringify(this.state.response.error));
-		// console.log("Not Admin"+this.state);
+		alert("Not admin"+JSON.stringify(this.state.response.error));
+		console.log("Not Admin"+this.state);
 		
-		//  } })
+		 } })
 	}
 
 
@@ -109,7 +109,7 @@ class AdminLogin extends Component
 								<i className="pi pi-user">Email</i>
 								</span>
 							
-								<input autocomplete="off" name="email" type="text" style={{width:"200px"}} onChange={this.handleChange}/>
+								<input autocomplete="off" name="user" type="text" style={{width:"200px"}} onChange={this.handleChange}/>
 								</div>
 
 								<div className="p-inputgroup">

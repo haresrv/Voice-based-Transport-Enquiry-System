@@ -18,14 +18,14 @@ var con = mysql.createConnection({
  
 // make to connection to the database.
 con.connect(function(err) {
-  if (err) throw err;
+  if (err) console.log(err)
   // if connection is successful
   con.query("select * from UserTable where Name='trimath'", function (err, result, fields) {
     // if any error while executing above query, throw error
     if (err) 
       {
         console.log('error');
-        throw err;
+        console.log(err)
 
       }
       console.log('ITS OK');
@@ -53,7 +53,7 @@ app.get('/BusStops',(req,res)=>{
     if (err) 
       {
         console.log('error');
-        throw err;
+        console.log(err)
 
       }
       
@@ -74,7 +74,7 @@ app.get('/RouteId',(req,res)=>{
     if (err) 
       {
         console.log('error');
-        throw err;
+        console.log(err)
 
       }
       
@@ -99,7 +99,7 @@ app.get('/Buses',(req,res)=>{
     if (err) 
       {
         console.log('error');
-        throw err;
+        console.log(err)
 
       }
       
@@ -114,6 +114,210 @@ app.get('/Buses',(req,res)=>{
 
 });	
 
+
+app.get('/Agencies',(req,res)=>{
+  
+  con.query("select distinct AgencyName from AgencyDetails", function (err, result, fields) {
+    
+    if (err) 
+      {
+        console.log('error');
+        console.log(err)
+
+      }
+      
+    var resx=[];
+      Object.keys(result).forEach(function(key) {
+      resx.push((result[key].AgencyName.toString()));
+    });
+      console.log(resx);
+      res.json(JSON.stringify(resx));
+  });
+
+
+}); 
+
+
+app.get('/fetchBuses/:id',(req,res)=>{
+  
+  console.log(req.params.id);
+
+  con.query(`select * from BusSchedule natural join BusInfo where RouteID=${req.params.id}`, function (err, result, fields) {
+    
+    if (err) 
+      {
+        console.log('error');
+        console.log(err)
+
+      }
+      
+    var resx=[];
+      Object.keys(result).forEach(function(key) {
+      resx.push((result[key]));
+      
+    });
+      console.log(resx);
+      res.json(JSON.stringify(resx));
+  });
+
+
+}); 
+
+
+
+
+app.post('/BookedSeats',(req,res)=>{
+  
+  var tdate=new Date(req.body.traveldate);
+  var bno=req.body.busregnno;
+  var dd=tdate.getUTCDate()+1;
+  var mm=tdate.getUTCMonth()+1;
+  var yyyy=tdate.getUTCFullYear();
+
+var xyz= yyyy+"-"+mm+"-"+dd;
+console.log(xyz)
+console.log(`select BookedSeats from Ticket natural join SeatsBooked where TravelDate='${xyz}' and BusRegnNo='${bno}'`);
+  con.query(`select BookedSeats from Ticket natural join SeatsBooked where TravelDate='${xyz}' and BusRegnNo='${bno}'`, function (err, result, fields) 
+  {
+
+      if (err) 
+      {
+        console.log('error');
+        console.log(err)
+
+      }
+      
+    var resx=[];
+      Object.keys(result).forEach(function(key) {
+      resx.push((result[key].BookedSeats.toString()));
+    });
+      console.log(resx);
+      res.json(JSON.stringify(resx));
+  });
+
+  
+}); 
+
+app.post('/Tickets',(req,res)=>{
+
+var rid=req.body.routeid;
+var regn=req.body.busregnno
+
+var bdate=new Date();
+var dd=bdate.getUTCDate()+1;
+var mm=bdate.getUTCMonth()+1;
+var yyyy=bdate.getUTCFullYear();
+var xyz= yyyy+"-"+mm+"-"+dd;
+
+var tdate=new Date(req.body.traveldate);
+var dd=tdate.getUTCDate()+1;
+var mm=tdate.getUTCMonth()+1;
+var yyyy=tdate.getUTCFullYear();
+var xyz2= yyyy+"-"+mm+"-"+dd;
+
+ 
+ console.log(`insert into Ticket (BusRegnNo,BookingDate,TravelDate) values ('${regn}','${xyz}','${xyz2}')`)
+          con.query(`insert into Ticket (BusRegnNo,BookingDate,TravelDate) values ('${regn}','${xyz}','${xyz2}')`, function (err, result, fields) {
+
+              if (err) 
+              {
+                console.log('error in Ticket');
+                console.log(err)
+
+              } 
+              else
+              {
+                 con.query(`select max(TicketPNR) as TicketPNR from Ticket`, function (err, res2, fields) {
+
+                      if (err) 
+                      {
+                        console.log('error');
+                        console.log(err)
+
+                      }
+
+                      var resx=[];
+                      Object.keys(res2).forEach(function(key) {
+                      resx.push((res2[key].TicketPNR.toString()));
+                      });
+                      console.log(resx);
+                      var abc={
+                        pnr:resx,
+                        error:err
+                      }
+                      res.json(JSON.stringify(abc));
+                      }); 
+                 console.log(result)  
+              }
+             
+})
+});
+
+app.post('/Through',(req,res)=>{
+
+var rid=req.body.routeid;
+var did=req.body.driverid;
+var regn=req.body.busregnno
+var pnr=req.body.pnr;
+var st=req.body.starttime
+
+    
+        console.log(`insert into Through values(${rid},${did},${st},'${regn}',${pnr})`)
+         
+       con.query(`insert into Through values(${rid},${did},${st},'${regn}',${pnr})`, function (err, result, fields) {
+
+              if (err) 
+              {
+                console.log('error in Through');
+                console.log(err)
+              }
+              else
+              {
+                  console.log("Insert done")
+              }
+
+           var abc={
+                res:result,
+                error:err
+              }
+              res.json(JSON.stringify(abc));
+          });
+      
+   
+
+}
+)
+
+
+
+app.post('/SeatsBooking',(req,res)=>{
+
+var pnr=req.body.pnr;
+var filled=req.body.seatsbooked;
+var f=0;
+  for(var i=0;i<filled.length;i++)
+  {
+  console.log(`insert into SeatsBooked values(${pnr},${filled[i]})`);
+  con.query(`insert into SeatsBooked values(${pnr},${filled[i]})`, function (err, result, fields) {
+
+      if (err) 
+      {
+        f=1;
+        console.log('error in SeatsBooked');
+        console.log(err)
+
+      }
+
+  });
+}
+var abc;
+ f==1? abc={ res:"",error:"Some error"}: abc={ res:"",error:null}
+   res.json(JSON.stringify(abc));
+
+}); 
+
+
+
 app.get('/BusRegnNo',(req,res)=>{
   
   con.query("select distinct BusRegnNo from BusInfo", function (err, result, fields) {
@@ -121,7 +325,7 @@ app.get('/BusRegnNo',(req,res)=>{
     if (err) 
       {
         console.log('error');
-        throw err;
+        console.log(err)
 
       }
       
@@ -140,7 +344,7 @@ app.get('/Drivers',(req,res)=>{
     if (err) 
       {
         console.log('error');
-        throw err;
+        console.log(err)
 
       }
       
@@ -166,7 +370,7 @@ var q="select * from UserTable where email='"+user+"' and Password='"+pass+"' an
 console.log(q)
  
  	 con.query(q, function (err, result, fields) {
-    if (err) throw err;
+    if (err) console.log(err)
     	if(result.length == 1)
     	{
     		var abc={
@@ -202,7 +406,7 @@ app.post('/signup', async (req, res) => {
    
    console.log(req.body);
 con.query("select count(*) as count from UserTable", function (err, result, fields) {
-if(err) throw err;
+if(err) console.log(err)
 
     Object.keys(result).forEach(function(key) {
       var res = result[key];
@@ -212,7 +416,7 @@ if(err) throw err;
 			console.log(q);
 
 			con.query(q, [Id,email,user,pass,address, phone, gender], function (err, result, fields) {
-			if (err) throw err;
+			if (err) console.log(err)
 			
 			else
 			{
@@ -247,10 +451,10 @@ app.post('/adminLogin', async (req, res) => {
    var user = req.body.username;
    var pass = req.body.password;
 
-var q="select * from UserTable where Name='"+user+"' and Password='"+pass+"'"
+var q="select * from UserTable where email='"+user+"' and Password='"+pass+"'"+" and Usertype='A'";
 console.log(q)
       con.query(q, function (err, result, fields) {
-        if (err) throw err;
+        if (err) console.log(err)
 			
 
 			if(result.length >= 1)
@@ -289,7 +493,7 @@ var q="SELECT distinct RouteId FROM BusStops WHERE RouteId IN (SELECT RouteId FR
 console.log(q)
 
    con.query(q, function (err, result, fields) {
-   if (err) throw err;
+   if (err) console.log(err);
      if(result.length >= 1)
      {
       var resx=[];
@@ -318,50 +522,36 @@ console.log(q)
 
 
 app.post('/busSchedule', async (req, res) => {
-   res.writeHead(200, { "Content-Type": "text/html" });
-
+  
    	var routeid = req.body.routeid;
     var driverid = req.body.driverid;
     var starttime = req.body.starttime;
-    var endtime = req.body.endtime;
-    var drivername = req.body.drivername;
     var esttraveltime = req.body.esttraveltime;
     var reservedseats = req.body.reservedseats;
     var busregnno = req.body.busregnno;
 	var fare = req.body.fare;
 
+starttime=(starttime/60/60);
 
-      con.query("insert into BusSchedule111 (BusRegnNo, RouteID, DriverID, StartTime, fare, ReservedSeats, TravelTime) values (?,?,?,?,?,?,?);", [busregnno, routeid, driverid, starttime, fare,reservedseats,esttraveltime], function (err, result, fields) {
-        if (err) throw err;
+     console.log(`insert into BusSchedule (BusRegnNo, RouteID, DriverID, StartTime, fare, ReservedSeats, TravelTime) values (${busregnno},${routeid},${driverid},${starttime},${fare},${reservedseats},${esttraveltime})`);
+
+      con.query("insert into BusSchedule (BusRegnNo, RouteID, DriverID, StartTime, fare, ReservedSeats, TravelTime) values (?,?,?,?,?,?,?);", [busregnno, routeid, driverid, starttime, fare,reservedseats,esttraveltime], function (err, result, fields) {
+        if (err) console.log(err);
         if(result.length === 1){
           console.log('Invalid credentials');
         }
         else{
-          
-        console.log('Successful');
-        }
-      });
-
-      console.log('Insertion Done into BusSchedule111');
-    
-
-      con.query("insert into BusSchedule112 (TravelTime, StartTime, EndTime) values (?,?,?);", [esttraveltime,starttime,endtime], function (err, result, fields) {
-        if (err) throw err;
-        if(result.length === 1){
+            
           console.log('Successful');
-        }
-        else{
-          console.log('Invalid credentials');3
-        }
-      });
+          }
+        });
 
-      console.log('Insertion Done into BusSchedule112');
-    
+            console.log('Insertion Done into BusSchedule');
 
-		    		var abc={
-		    			error:'',
-		    			response:''
-		    		}
+	    		var abc={
+	    			error:'',
+	    			response:''
+	    		}
 
 		    	res.json(JSON.stringify(abc));
     
@@ -370,7 +560,6 @@ app.post('/busSchedule', async (req, res) => {
 app.post('/bus', async (req, res) => {
    
    	var busregno = req.body.busregnno;
-	var agencyaddr = req.body.agencyaddr;
 	var agencyname = req.body.agencyname;
 	var capacity = req.body.capacity;
 	var ac = req.body.ac;
@@ -380,8 +569,8 @@ app.post('/bus', async (req, res) => {
 	
 	console.log(busregno+" "+agencyname+" "+capacity+" "+ac+" "+LocationName+" "+Latitude+" "+Longitude);
 
-	con.query("insert into Bus1 (BusRegnNo, AgencyName, TotalSeats, AC,LocationName,Latitude,Longitude) values (?,?,?,?,?,?,?);", [busregno, agencyname,capacity, ac,LocationName, Latitude,Longitude], function (err, result, fields) {
-        if (err) throw err;
+	con.query("insert into BusInfo (BusRegnNo, AgencyName, TotalSeats, AC,LocationName,Latitude,Longitude) values (?,?,?,?,?,?,?);", [busregno, agencyname,capacity, ac,LocationName, Latitude,Longitude], function (err, result, fields) {
+        if (err) console.log(err);
         if(result.length === 1){
           console.log('Invalid credentials');
 
@@ -391,18 +580,6 @@ app.post('/bus', async (req, res) => {
         }
       });
     
-  
-      con.query("insert into Bus2 (AgencyName,AgencyAddress) values (?,?);", [agencyname,agencyaddr], function (err, result, fields) {
-        if (err) throw err;
-        if(result.length === 1){
-          console.log('Invalid credentials');
-        }
-        else{
-          
-        	console.log('Successful');
-        }
-      });
-  
   	    		var abc={
 		    			error:'',
 		    			response:''
@@ -419,20 +596,31 @@ app.post('/driver', async (req, res) => {
    	var driverid = req.body.driverid;
 	var drivername = req.body.drivername;
 	var driverphone = req.body.driverphone;
+  var age=req.body.age;
+  var date_of_join = req.body.date_of_join;
 
-   con.query("insert into BusSchedule23 (driverid, drivername, driverphone) values (?,?,?);", [driverid, drivername, driverphone], function (err, result, fields) {
-        if (err) throw err;
-        if(result.length === 1){
+console.log(drivername+" "+driverphone+" "+age+" "+date_of_join)
+
+   con.query("insert into DriverDetails (drivername, driverphone, age , date_of_join) values (?,?,?,?);", [drivername, driverphone,age,date_of_join], function (err, result, fields) {
+        if (err) console.log(err)
+        if(result.length){
           console.log('Successful');
         }
         else{
           console.log('Invalid credentials');
         }
       });
+        var abc={
+              error:'',
+              response:''
+            }
+
+          console.log(abc);
+          res.json(JSON.stringify(abc));
+
+
     });
     
-
-
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

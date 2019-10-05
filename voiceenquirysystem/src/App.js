@@ -13,8 +13,10 @@ import Seat from './Components/Seat/Seat';
 import Payment from './Components/Payment/Payment';
 import Message from './Components/Message/Message';
 import Text2Speech from './Components/Text2Speech/Text2Speech';
+import Ticket from './Components/Ticket/Ticket';
 
-  const initial_state={
+
+const initial_state={
       busy:false,
       isSignedin:false,
       isAdmin:false,
@@ -31,7 +33,8 @@ class App extends Component {
       isAdmin:false,
       route:'home',
       error:'',
-      routeid:[]
+      routeid:[3,4],
+      selbus:[]
     }
   }
 
@@ -103,13 +106,71 @@ else if(route === 'register')
   this.setState({route:route});
 }
 
+  Reset=()=>{    
+    this.setState({routeid:[]});
+    this.setState({pnr:[]});
+    this.setState({selbus:[]});
+  }
+
   SetRouteId = (resx) => {
-    console.log(resx);
-    this.setState({routeid:resx},function() {
+
+    this.state.routeid.push(resx);
+    
+    console.log("Inside Set RouteID")
+    this.setState({done:"True"},function() {
+      console.log("EVERYthing")  
+    });
+  }
+
+  setPlaces= (resx1,resx2) => {
+
+    this.setState({from:resx1});
+    this.setState({to:resx2});
+    console.log("Inside Set Places")
+    this.setState({done:"True"},function() {
       console.log(this.state)  
     });
-    
   }
+
+  setPNR= (resx) => {
+
+    this.setState({pnr:resx[0]});
+    
+    console.log("Inside Set PNR")
+    this.setState({done:"True"},function() {
+      console.log(this.state)  
+    });
+  }
+
+  setbooked= (resx) => {
+
+    this.setState({bookedseats:resx});
+    
+    console.log("Inside Set Booked")
+    this.setState({done:"True"},function() {
+      console.log(this.state)  
+    });
+  }
+
+
+  SetBus = (resx) => {
+    this.setState({selbus:resx});
+    
+    console.log("Inside Set Bus")
+    this.setState({done:"True"},function() {
+      console.log(this.state)  
+    });
+  }
+
+  SetTravelDate = (resx) => {
+    this.setState({traveldate:resx});
+    
+    console.log("Inside Set Date")
+    this.setState({done:"True"},function() {
+      console.log(this.state)  
+    });
+  }
+
 
   handleSubmit = (event) => {
 
@@ -163,7 +224,7 @@ else if(route === 'register')
                                   <div>
                                     <Navigation route={this.state.route} onRouteChange={this.onRouteChange} isSignedin={this.state.isSignedin}/>
                                     <Logo/>
-                                    <Welcome SetRouteId={this.SetRouteId} RouteChanger={this.RouteChanger} sbus={true}/> 
+                                    <Welcome setPlaces={this.setPlaces} SetTravelDate={this.SetTravelDate} onRouteChange={this.onRouteChange} Reset={this.Reset} SetRouteId={this.SetRouteId} RouteChanger={this.RouteChanger} sbus={true} /> 
                                   </div>
                                )
                                ://else
@@ -190,18 +251,15 @@ else if(route === 'register')
                                                   
                                                           {
                                                             
-                                                            <Card from={this.state.from} to={this.state.to} sbus={true} onRouteChange={this.onRouteChange} id={bus[0].id} name={bus[0].name} />
-                                                            /* <Card sbus={true} onRouteChange={this.onRouteChange} id={bus[0].id} name={bus[0].name} from={bus[0].from} to={bus[0].to} />
-                                                                <Card sbus={true} onRouteChange={this.onRouteChange} id={bus[1].id} name={bus[1].name} from={bus[1].from} to={bus[1].to} />
-                                                                <Card sbus={true} onRouteChange={this.onRouteChange} id={bus[2].id} name={bus[2].name} from={bus[2].from} to={bus[2].to} />
-                                                                <Card sbus={true} onRouteChange={this.onRouteChange} id={bus[3].id} name={bus[3].name} from={bus[3].from} to={bus[3].to} /> */}
+                                                            <Card SetBus={this.SetBus} onRouteChange={this.onRouteChange} routeids={this.state.routeid} from={this.state.from} to={this.state.to} sbus={true} onRouteChange={this.onRouteChange} id={bus[0].id} name={bus[0].name} />
+                                                          }
                                                       </div>
                                                   ): (this.state.route==='test')?
 
                                              (
                                                 <div>
                                                     <Navigation route={this.state.route} onRouteChange={this.onRouteChange} isSignedin={this.state.isSignedin}/>
-                                                    <Seat onRouteChange={this.onRouteChange}/>                  
+                                          <Seat bus={this.state.selbus}  seldate={this.state.traveldate} routeid={this.state.selbus.routeid} SetBus={this.SetBus} setPNR={this.setPNR} setbooked={this.setbooked} onRouteChange={this.onRouteChange}/>                  
                                                 </div>
                                                 
                                               ): (this.state.route==='testing')?
@@ -236,6 +294,9 @@ else if(route === 'register')
                                                       <div>
                                                             <Text2Speech />
                                                       </div>
+                                                  ):(this.state.route==='ticket')? (
+                                                  
+                                                    <Ticket dot={this.traveldate} start={this.state.from} to={this.state.to} stime={this.state.selbus.StartTime} seats={this.state.bookedseats}/>
                                                   ):
 
                                              <p>ERROR 404</p>

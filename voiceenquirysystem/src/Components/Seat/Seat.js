@@ -13,18 +13,133 @@ constructor(props)
 {
 	super(props);
 	this.state={
-		reserved:0
+		reserved:0,
+		seatsfilled:[],
+		seatsbooked:[]
 	}
 }
+
+ 
+    componentDidMount() {
+         fetch('http://localhost:3001/BookedSeats',{
+		      method:'post',
+		      headers:{'Content-Type':'application/json'},
+		      body:JSON.stringify({
+		      	traveldate:this.props.seldate,
+		      	busregnno:this.props.bus.BusRegnNo
+		      })
+      })
+        .then(res=> res.json())
+        .then(data=>{this.setState({seatsfilled:JSON.parse(data)})})
+        .then(xyz=>{console.log(this.state)})
+        .catch((err)=>{console.log(err);})
+// // bus seldate routeid
+// console.log(this.props.seldate);
+// console.log(this.props.bus.BusRegnNo);
+    }
+
+handleBooking=(event)=>{
+	event.preventDefault();
+	console.log(this.state)
+
+	if(this.state.seatsbooked.length==0)
+	{
+		alert("Book seat to continue")
+	}
+	else
+	{
+				fetch('http://localhost:3001/Tickets',{
+						method:'post',
+						headers:{'Content-Type':'application/json'},
+						body:JSON.stringify({
+							traveldate:this.props.seldate,
+							busregnno:this.props.bus.BusRegnNo,
+							seatsbooked:this.state.seatsbooked,
+							starttime:this.props.bus.StartTime,
+							routeid:this.props.bus.RouteID,
+							driverid:this.props.bus.DriverID
+						})
+						})
+						.then(res=> res.json())
+						.then(data=>{this.setState({response:JSON.parse(data)},function(){console.log(this.state);console.log("NOOO")})})
+						.then(x=>{
+						if(this.state.response.error===null)
+						{ 
+								this.props.setPNR(this.state.response.pnr);
+						        this.props.setbooked(this.state.seatsbooked);
+						        fetch('http://localhost:3001/SeatsBooking',{
+										method:'post',
+										headers:{'Content-Type':'application/json'},
+										body:JSON.stringify({
+											pnr:this.state.response.pnr,
+											traveldate:this.props.seldate,
+											busregnno:this.props.bus.BusRegnNo,
+											seatsbooked:this.state.seatsbooked,
+											starttime:this.props.bus.StartTime,
+											routeid:this.props.bus.RouteID,
+											driverid:this.props.bus.DriverID
+										})
+										})
+										.then(res=> res.json())
+										.then(data=>{this.setState({response2:JSON.parse(data)})})
+										.then(x=>{
+										if(this.state.response2.error===null)
+										{ 
+											console.log("Entered into SeatsBooked")
+													fetch('http://localhost:3001/Through',{
+													method:'post',
+													headers:{'Content-Type':'application/json'},
+													body:JSON.stringify({
+														pnr:this.state.response.pnr,
+														traveldate:this.props.seldate,
+														busregnno:this.props.bus.BusRegnNo,
+														seatsbooked:this.state.seatsbooked,
+														starttime:this.props.bus.StartTime,
+														routeid:this.props.bus.RouteID,
+														driverid:this.props.bus.DriverID
+													})
+													})
+													.then(res=> res.json())
+													.then(data=>{this.setState({response3:JSON.parse(data)})})
+													.then(x=>{
+													if(this.state.response3.error===null)
+													{ 
+														console.log("Entered into Through")
+														alert("Succesfully Booked!!!")
+
+													}
+													else
+													alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+													})
+
+										}
+										else
+										alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+										})
+
+						}
+						else
+						alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+						})
+
+	}
+	
+
+
+
+}
+
 
 pay=(text,op)=>
 {	
 		text=text.toString(10);
 		
+
 		let ul = document.getElementById('mylist');
         if(op==='1')
     {    let li = document.createElement('li');
         li.appendChild(document.createTextNode(text));
+        this.state.seatsbooked.includes(parseInt(text))?    console.log("1"):this.state.seatsbooked.push(parseInt(text));
         ul.appendChild(li);
     }
     	else
@@ -34,12 +149,18 @@ pay=(text,op)=>
     	{
     		
     		if(ul.childNodes[x].textContent===text)
-    			{ul.removeChild(ul.childNodes[x]);		
-
+    			{
+    				ul.removeChild(ul.childNodes[x]);		
+    				this.state.seatsbooked=this.state.seatsbooked.filter( function(n)
+    					{
+    					 return n!=(parseInt(text)) 
+    					})
+    				
     			}
     	}
     	
     }
+    console.log(this.state)
 }
 
 onreserved=(x)=>
@@ -73,14 +194,14 @@ render()
 						 <ScrollPanel  style={{width: '400px', height: 'auto'}}>							  	            
 								<div className='rowC'>
 								<div >
-								<SeatRow seatrow={seatrow[0]} change={this.pay} reserve={this.onreserved}/>
-						 		<SeatRow seatrow={seatrow[1]} change={this.pay} reserve={this.onreserved}/>
-						  		<SeatRow seatrow={seatrow[2]} change={this.pay} reserve={this.onreserved}/>
-						 		<SeatRow seatrow={seatrow[3]} change={this.pay} reserve={this.onreserved}/>
-								<SeatRow seatrow={seatrow[4]} change={this.pay} reserve={this.onreserved}/>
-						 		<SeatRow seatrow={seatrow[5]} change={this.pay} reserve={this.onreserved}/>
-						  		<SeatRow seatrow={seatrow[6]} change={this.pay} reserve={this.onreserved}/>
-						 		<SeatRow seatrow={seatrow[7]} change={this.pay} reserve={this.onreserved}/>
+								<SeatRow filled={this.state.seatsfilled} seatrow={seatrow[0]} change={this.pay} reserve={this.onreserved}/>
+						 		<SeatRow filled={this.state.seatsfilled} seatrow={seatrow[1]} change={this.pay} reserve={this.onreserved}/>
+						  		<SeatRow filled={this.state.seatsfilled} seatrow={seatrow[2]} change={this.pay} reserve={this.onreserved}/>
+						 		<SeatRow filled={this.state.seatsfilled} seatrow={seatrow[3]} change={this.pay} reserve={this.onreserved}/>
+								<SeatRow filled={this.state.seatsfilled} seatrow={seatrow[4]} change={this.pay} reserve={this.onreserved}/>
+						 		<SeatRow filled={this.state.seatsfilled} seatrow={seatrow[5]} change={this.pay} reserve={this.onreserved}/>
+						  		<SeatRow filled={this.state.seatsfilled} seatrow={seatrow[6]} change={this.pay} reserve={this.onreserved}/>
+						 		<SeatRow filled={this.state.seatsfilled} seatrow={seatrow[7]} change={this.pay} reserve={this.onreserved}/>
 						  		</div>
 				
 
@@ -103,9 +224,9 @@ render()
 												
 
 												</ul>										
-										Total: <b>$<span id="total">({this.state.reserved*300})</span></b>
+										Total: <b>₹<span id="total">({this.state.reserved*300})</span></b>
 
-										<button className="checkout-button" onClick={() => this.props.onRouteChange('testing')} >Pay Now</button>
+										<button className="checkout-button" onClick={this.handleBooking} >Pay Now</button>
 									</div>
 
 

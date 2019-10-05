@@ -39,31 +39,31 @@ class SignUpForm extends Component
 
 	handleRegister = (event) => {
 		event.preventDefault();
-this.props.onRouteChange('home');
+//this.props.onRouteChange('home');
 
-		// fetch('http://localhost:3001/signup',{
-		//   method:'post',
-		//   headers:{'Content-Type':'application/json'},
-		//   body:JSON.stringify({
-		//   	username:this.state.username,
-		// 	pass:this.state.pass,
-		// 	email:this.state.email,
-		// 	address:this.state.address,
-		// 	phone:this.state.phone,
-		// 	gender:this.state.gender
-		//   })
-		//   }).then(res=> res.json())
-		//   .then(data=>{this.setState({response:JSON.parse(data)})})
-		//   .then(x=>{
-		//    if(JSON.stringify(this.state.response.error)==='null')
-		//   { 
-		//    alert('Login Success');
+		fetch('http://localhost:3001/signup',{
+		  method:'post',
+		  headers:{'Content-Type':'application/json'},
+		  body:JSON.stringify({
+		  	username:this.state.username,
+			pass:this.state.pass,
+			email:this.state.email,
+			address:this.state.address,
+			phone:this.state.phone,
+			gender:this.state.gender
+		  })
+		  }).then(res=> res.json())
+		  .then(data=>{this.setState({response:JSON.parse(data)})})
+		  .then(x=>{
+		   if(JSON.stringify(this.state.response.error)==='null')
+		  { 
+		   alert('Login Success');
 				
 
-		//   }
-		//   else
-		//     alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
-		//   })
+		  }
+		  else
+		    alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+		  })
 
 	}
 

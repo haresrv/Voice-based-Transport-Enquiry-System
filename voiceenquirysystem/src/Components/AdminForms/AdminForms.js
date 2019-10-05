@@ -39,6 +39,7 @@ class AdminForm extends Component
 			existingroutes:[],
 			existingdrivers:[],
 			existingbuses:[],
+			existingagency:[],
 			stateid:'',			
 			routeid:'',
 			driverid:'',
@@ -50,12 +51,13 @@ class AdminForm extends Component
 			busregnnoo:'',
 			agencyaddr:'',
 			agencyname:'',
-			capacity:'',
-			ac:'',
+			capacity:0,
+			ac:0,
 			doj:'',
 			drivername:'',
 			driverphone:'',
-			fare:''
+			driverage:'',
+			fare:0
 		};
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -67,7 +69,113 @@ class AdminForm extends Component
 			this.setState({logged:true});
 
 	}
+ handleSubmit1 = (event) =>
+  {
+    event.preventDefault();
+    
+      fetch('http://localhost:3001/busSchedule',{
+      method:'post',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+      routeid:this.state.routeid,
+      driverid:this.state.driverid,
+      starttime:this.state.starttime,
+      endtime:this.state.endtime,
+      busregnno:this.state.busregnnoo,
+      esttraveltime:this.state.esttraveltime,
+      reservedseats:this.state.reservedseats,
+      fare:this.state.fare
+      })
+      }).then(res=> res.json())
+      .then(data=>{this.setState({response:JSON.parse(data)})})
+      .then(x=>{
+       if(this.state.response.error==="")
+      { 
+       alert('Record insertion done');
+      
+      }
+      else
+        alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+      })
+      
 
+  }
+
+
+  handleSubmit2 = (event) =>
+  {
+
+    event.preventDefault();
+      console.log(this.state);
+
+      fetch('http://localhost:3001/bus',{
+      method:'post',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        busregnno:this.state.busregnno,
+      agencyaddr:this.state.agencyaddr,
+      agencyname:this.state.agencyname,
+      capacity:this.state.capacity,
+      ac:this.state.ac
+      })
+      }).then(res=> res.json())
+      .then(data=>{this.setState({response2:JSON.parse(data)})})
+      .then(x=>{
+       if(this.state.response2.error==='')
+      { 
+       alert('Record insertion done');
+      
+      }
+      else
+        alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response2.error));
+      })
+      
+  }
+
+  handleSubmit3 = (event) =>
+  {
+    event.preventDefault();
+  
+      fetch('http://localhost:3001/driver',{
+      method:'post',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+      driverid:this.state.driveid,
+      drivername:this.state.drivername,
+      driverphone:this.state.driverphone,
+      age:this.state.driverage,
+      date_of_join:this.state.doj
+      })
+      }).then(res=> res.json())
+      .then(data=>{this.setState({response3:JSON.parse(data)})})
+      .then(x=>{
+              if(this.state.response3.error==='')
+      { 
+       alert('Record insertion done');
+      
+      }
+      else
+        alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response3.error));
+      })
+
+  }
+
+    handleClick1 = () =>
+    {
+      this.speak("Add a Bus Schedule to existing routes");
+    }
+
+
+    handleClick2 = () =>
+    {
+      this.speak("Add new Bus Details");
+    }
+
+
+    handleClick3 = () =>
+    {
+      this.speak("View Transaction Logs");
+    }
 
 	componentDidMount() {
         fetch('http://localhost:3001/RouteId').then(res=> res.json())
@@ -82,7 +190,12 @@ class AdminForm extends Component
 		fetch('http://localhost:3001/Drivers').then(res=> res.json())
 		.then(data=>{this.setState({existingdrivers:JSON.parse(data)})})
 		.catch((err)=>{console.log(err);})
-		
+	
+
+		fetch('http://localhost:3001/Agencies').then(res=> res.json())
+		.then(data=>{this.setState({existingagency:JSON.parse(data)})})
+		.catch((err)=>{console.log(err);})
+			
 	}
 
 
@@ -96,6 +209,10 @@ class AdminForm extends Component
 	render()
 	{
 		const options=["TN","KL","KA","TS","AP"];
+		const optionsage=[];
+		for(var i=30;i<=60;i++)
+			optionsage.push(i);
+		
 		return(
   			<div className="Ap bg-green pa3">
               {
@@ -111,7 +228,7 @@ class AdminForm extends Component
 								
 							  <div className='FormGroup'>
 					             <span className='Subheads'>Enter Journey Start Time:</span>
-								 <TimePicker style={{width:"200px",margin:"0 auto"}} name='starttime' onChange={(e)=>{this.setState({starttime:e})}} start="0:00" end="24:00" step={30} />
+								 <TimePicker style={{width:"200px",margin:"0 auto"}} name='starttime' onChange={(e)=>{this.setState({starttime:e},function(){console.log(this.state)})}} start="0:00" end="24:00" step={30} />
 							  </div>
 
 								<div className='FormGroup'>
@@ -154,11 +271,9 @@ class AdminForm extends Component
 				        	    <div className='FormGroup'>
 									
 								<span className='Subheads'>Enter Agency Name:</span><br/>
-					             <input style={{width:"300px",height:"30px"}} autoComplete='off' className='Boxesx' type='text' required onChange={this.handleChange} name='agencyname' placeholder='Agency Name'/>
-					             <br/>
-								 <span className='Subheads'>Enter Agency Address:</span>
-								 <InputTextarea style={{marginTop:"10px",width:"300px"}} rows={5} cols={30} onChange={this.handleChange} name='agencyaddr' placeholder='Agency Address' autoResize={true}/>
-								 {/* <input autoComplete='off' className='Boxesx' type='text' required onChange={this.handleChange} name='agencyaddr' placeholder='Agency Address'/> */}
+					             
+					            <Dropdown options={this.state.existingagency} onChange={(e)=>{this.setState({agencyname:e.label})}} value={"Agency Name:"+this.state.agencyname} placeholder="Select an option" />
+					             {/* <input autoComplete='off' className='Boxesx' type='text' required onChange={this.handleChange} name='agencyaddr' placeholder='Agency Address'/> */}
 				        	    </div>
 
 				        	    <div className='FormGroup'>
@@ -169,10 +284,10 @@ class AdminForm extends Component
 								<div className='FormGroup'>
 								<span className='Subheads'>AC Available(Yes/No)?</span>
 								<RadioGroup name='ac' style={{color:"#c71c1c",background:"#ffffff",margin:"0 auto",width:"150px",display:"flex"}} onChange={ this.onChange } horizontal>
-									<RadioButton iconSize={25} iconInnerSize={12} rootColor="#00ff00" pointColor="#00ff00" value="yes">
+									<RadioButton iconSize={25} iconInnerSize={12} rootColor="#00ff00" pointColor="#00ff00" value="yes" onClick={(e)=>{this.setState({ac: 1})}}>
 										Yes
 									</RadioButton>
-									<RadioButton iconSize={25} iconInnerSize={12} rootColor="#c71c1c" pointColor="#c71c1c" value="no">
+									<RadioButton iconSize={25} iconInnerSize={12} rootColor="#c71c1c" pointColor="#c71c1c" value="no" onClick={(e)=>{this.setState({ac: 0})}}>
 										No
 									</RadioButton>
 								</RadioGroup>
@@ -209,7 +324,7 @@ class AdminForm extends Component
 
 								<div className='FormGroup'>
 					             <span className='Subheads'>Enter Driver Age:</span>
-					             <input style={{width:"300px",height:"30px"}} autoComplete='off' className='Boxesx' type='text' onChange={this.handleChange} required name='drivername' placeholder='Driver Name'/>
+					           <Dropdown   options={optionsage} onChange={(e)=>{this.setState({driverage:e.label})}} value={"AGE:"+this.state.driverage}/>
 				        	    </div>
 								
 								<div className='FormGroup'>

@@ -21,6 +21,7 @@
     "react-scripts": "3.0.1",
     "react-select": "^3.0.4",
     "react-tilt": "^0.1.4",
+    "react-to-print": "^2.4.0",
     "tachyons": "^4.11.1"
   },
   "scripts": {

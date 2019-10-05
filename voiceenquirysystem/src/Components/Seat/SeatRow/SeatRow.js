@@ -18,20 +18,39 @@ constructor(props)
 	
 }
 
+LoadSeats=()=>{
+
+	var xyz=this.props.filled;
+	
+
+if(this.props.filled.length>0)
+{
+		return (this.state.Mapper.map((key, index) => {
+			return xyz.includes(key.toString())?
+			
+				<Single key={index} filled={this.props.seatsfilled} reserve={this.props.reserve} disable={true} change={this.props.change} seatNo={this.state.Mapper[index]} back='#d1271b'/>
+			
+			:
+			
+				<Single key={index} filled={this.props.seatsfilled} reserve={this.props.reserve} change={this.props.change} seatNo={this.state.Mapper[index]} back='#2a7022'/>
+			
+			
+		}))
+}		
+
+	}
+
 render()
 {
 
 	// const Mapper = [1, 2, 3,4,5];
 
+
+
 	return(
 						 <ScrollPanel style={{width: '100%', height: 'auto'}}>							  	            
-								<Single reserve={this.props.reserve} change={this.props.change} seatNo={this.state.Mapper[0]} back='#2a7022'/>
-								<Single reserve={this.props.reserve} change={this.props.change} seatNo={this.state.Mapper[1]} back='#2a7022'/>
-								<Single reserve={this.props.reserve} change={this.props.change} seatNo={this.state.Mapper[2]} back='#2a7022'/>
-						  		<Single reserve={this.props.reserve} change={this.props.change} seatNo='' back='#ffffff'/>
-						  		<Single reserve={this.props.reserve} change={this.props.change} seatNo={this.state.Mapper[3]} back='#2a7022'/>
-								<Single reserve={this.props.reserve} change={this.props.change} seatNo={this.state.Mapper[4]} back='#2a7022'/>
-						  		
+								{this.LoadSeats()}
+								
 						</ScrollPanel>
 
 

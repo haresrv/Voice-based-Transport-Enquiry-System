@@ -38,6 +38,7 @@ return(
                                 (this.props.route==='search')? (
                                                       <div>
 															<h1  className="face f3 black b--dashed bg-gold dim black pa3"> DELOS DESTINATIONS </h1>
+                              <p onClick={() => this.props.onRouteChange('t')} className="f3 link b blue hover-black bg-animate hover-bg-gold dim black underline pa3 pointer">Home Page </p>                              
                                                       </div>
                                                   ): (this.props.route==='test')?
 

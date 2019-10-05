@@ -35,27 +35,27 @@ class Signin extends Component
 	handleSignin = (event) => {
 		event.preventDefault();
 		console.log(this.state)
-		this.props.onRouteChange('home')
+		//this.props.onRouteChange('home')
 		
-		// fetch('http://localhost:3001/login',{
-		//   method:'post',
-		//   headers:{'Content-Type':'application/json'},
-		//   body:JSON.stringify({
-		//   	email:this.state.email,
-		// 	password:this.state.pass
-		//   })
-		//   }).then(res=> res.json())
-		//   .then(data=>{this.setState({response:JSON.parse(data)})})
-		//   .then(x=>{
-		//    if((this.state.response.error)==='')
-		//   { 
-		//    alert('Login Success');
-		// 	this.props.onRouteChange('home')
+		fetch('http://localhost:3001/login',{
+		  method:'post',
+		  headers:{'Content-Type':'application/json'},
+		  body:JSON.stringify({
+		  	email:this.state.email,
+			password:this.state.pass
+		  })
+		  }).then(res=> res.json())
+		  .then(data=>{this.setState({response:JSON.parse(data)})})
+		  .then(x=>{
+		   if((this.state.response.error)==='')
+		  { 
+		   alert('Login Success');
+			this.props.onRouteChange('home')
 	
-		//   }
-		//   else
-		//     alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
-		//   })
+		  }
+		  else
+		    alert("Error inserting. Please follow all restrictions:"+JSON.stringify(this.state.response.error));
+		  })
 
 
 	}

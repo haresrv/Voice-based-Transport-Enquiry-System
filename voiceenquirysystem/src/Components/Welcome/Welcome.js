@@ -81,17 +81,6 @@ class Welcome extends Component
         }, 250);
     }
     
-    handleTextareaChange(event) {
-        this.setState({
-            textareaValue: event.target.value
-        });
-    }
-
-    handleTextChange(event) {
-        this.setState({
-            textValue: event.target.value
-        });
-    }
 
 	handleRegister = (event) => {
 		event.preventDefault();
@@ -99,23 +88,33 @@ class Welcome extends Component
         console.log(this.state);
         //this.props.RouteChanger('search',this.state.fromSelect,this.state.toSelect)
 
+        this.props.SetTravelDate(this.state.onwarddate);
+
 		fetch('http://localhost:3001/CheckRoute',{
 		  method:'post',
 		  headers:{'Content-Type':'application/json'},
 		  body:JSON.stringify({
             fromSelect:this.state.fromSelect,
             toSelect:this.state.toSelect
-        })
+            })
 		  }).then(res=> res.json())
 		  .then(data=>{this.setState({response:JSON.parse(data)})})
 		  .then(x=>{
 		   if(this.state.response.error==='')
 		  { 
+            this.props.setPlaces(this.state.fromSelect,this.state.toSelect)
 		   alert(this.state.response.response);
-            console.log(this.state)
+           
+            this.props.Reset();
               if(this.props.sbus===true)
-                this.props.SetRouteId(this.state.response.response)  
-              // this.props.onRouteChange('search')
+               {
+
+                for(var i=0;i<this.state.response.response.length;i++)
+                {
+                    this.props.SetRouteId(this.state.response.response[i],1)   
+                }
+                    this.props.onRouteChange('search')
+                }
             else
             {   
                 this.props.onRouteChange('locate')
@@ -175,7 +174,6 @@ return (
                                                 onChange={(e) => this.setState({fromSelect: e.value})} />
     			 </div>
 
-                 <App id={1}/>
 
     			  <div className="form-group col-md-10">
     			      	 <label htmlFor="to">Destination</label>
@@ -191,7 +189,6 @@ return (
 
     			  </div>
 
-                  <App id={2}/>
 
 
     			  <div className="form-group col-md-10">
